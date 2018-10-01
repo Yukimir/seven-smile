@@ -1,0 +1,27 @@
+.bar {
+  display: flex;
+  padding-top: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  justify-content: space-between;
+}
+
+.raid-name {
+  margin-right: 15px;
+}
+
+.content {
+  margin: 20px;
+}
+
+.bar .left {
+  display: flex;
+}
+
+i {
+  line-height: inherit;
+}
+
+.ant-cascader-menu {
+  height: 450px;
+}

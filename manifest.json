@@ -1,0 +1,20 @@
+{
+  "pluginName": "碧蓝HOST",
+  "author": "Yukimir",
+  "version": "0.0.3",
+  "description": "选择最佳的碧蓝幻想服务器",
+  "entry": "popup.html",
+  "enable": false,
+  "background": "background.js",
+  "game": ["granblue"],
+  "inject": "inject.js",
+  "windowOption": {
+    "width": 500,
+    "height": 500,
+    "title": "碧蓝HOST­",
+    "minimizable": true,
+    "maximizable": false,
+    "transparent": false,
+    "resizable": true
+  }
+}

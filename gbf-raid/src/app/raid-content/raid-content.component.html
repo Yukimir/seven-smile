@@ -1,0 +1,23 @@
+<div class="bar">
+  <div class="left">
+    <nz-cascader [nzColumnClassName]="'column'" [nzShowInput]="false" [nzOptions]="nzOptions" (nzSelectionChange)="onSelectionChange($event)"
+      [nzExpandTrigger]="'hover'">
+      <a href="javascript: void(0)">选择监控对象</a>
+    </nz-cascader>
+    <div class="raid-name">{{selectedRaid}}</div>
+  </div>
+
+  <i class="anticon anticon-close" (click)="clearSelect()"></i>
+</div>
+
+<div class="content">
+  <nz-list [nzDataSource]="raidList" [nzRenderItem]="item" [nzItemLayout]="'vertical'">
+    <ng-template #item let-raid>
+      <nz-list-item [nzContent]="raid.Message">
+        <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="raid.Name">
+          <ng-template #nzTitle><a (click)="selectRaid(raid)">{{raid.ID}}</a></ng-template>
+        </nz-list-item-meta>
+      </nz-list-item>
+    </ng-template>
+  </nz-list>
+</div>
