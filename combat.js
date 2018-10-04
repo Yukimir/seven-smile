@@ -1,3 +1,45 @@
+const magicCode = ['火', '水', '土', '风'];
+const magicLeft = -13;
+const magicRight = -40.5
+const magicHeight = [
+  -804,
+  -1010,
+  -907,
+  -701
+]
+const magicActiveHeight = [
+  -393,
+  -289,
+  -598,
+  -495
+]
+const magicDesc = [
+  ['火伤/火+1<br>※火-2 全火攻↑/庇护', '奥义满<br>※火-1 全必杀↑', '参战者弱体耐性↑', '光伤/光+1<br>※光-2 全光攻↑/幻影2回'],
+  ['水伤<br>※水-1 敌水牢', '水伤/水+1<br>※水-2 全水攻↑/变转/有利属伤↓', '暗伤/暗+1<br>※暗-2 全暗攻↑/奥义性能UP', '奶死那些背水佬'],
+  ['敌自属防御↓', '全弱体回1/弱体成功↑', '土伤/土+1<br>※土-2 全土攻↑/连击↑', '土伤 <br>※土-1 敌命中率↓'],
+  ['全奥义上升量↑/敌特动全TA↑', '敌自不利属攻↓', '全活性<br>※风-1 高扬', '风伤/风+1<br>※风-2 全风攻↑/技能性能↑']
+]
+
+
+function emulateClick(element, event) {
+  let eventDown = element.ownerDocument.createEvent('MouseEvents');
+  let eventUp = element.ownerDocument.createEvent('MouseEvents');
+  let r = Math.floor(Math.random() * 10);
+  eventDown.initMouseEvent('mousedown', true, true, window, 0, event.screenX + r, event.screenY, event.clientX + r, event.clientY);
+  eventUp.initMouseEvent('mouseup', true, true, window, 0, event.screenX + r, event.screenY, event.clientX + r, event.clientY);
+
+  function click() {
+    let ms = Math.random() * 10 + 50;
+    ms = Math.floor(ms);
+    element.dispatchEvent(eventDown, true);
+    setTimeout(() => {
+      element.dispatchEvent(eventUp, true);
+    }, ms);
+  }
+
+  click();
+}
+
 class abilityBtn {
   constructor(pos, abi, context) {
     this.pos = pos;
@@ -29,22 +71,7 @@ class abilityBtn {
       $(this.img).css('filter', 'brightness(60%)');
       var icon = $(`.ability-character-num-${this.pos}-${this.abi}`);
       if (!icon.attr('ability-name')) return;
-      // 模拟鼠标事件
-      let eventDown = icon[0].ownerDocument.createEvent('MouseEvents');
-      let eventUp = icon[0].ownerDocument.createEvent('MouseEvents');
-      eventDown.initMouseEvent('mousedown', true, true, window, 0, event.screenX, event.screenY, event.clientX, event.clientY);
-      eventUp.initMouseEvent('mouseup', true, true, window, 0, event.screenX, event.screenY, event.clientX, event.clientY);
-
-      function click() {
-        let ms = Math.random() * 20 + 50;
-        ms = Math.floor(ms);
-        icon[0].dispatchEvent(eventDown, true);
-        setTimeout(() => {
-          icon[0].dispatchEvent(eventUp, true);
-        }, ms);
-      }
-
-      click();
+      emulateClick(icon[0], event);
 
     })
   }
@@ -104,6 +131,29 @@ function inject() {
   sheet.insertRule(`
   .block{
     display:block !important;
+  }
+  `, 0);
+  sheet.insertRule(`
+  .magic-cheat-sheet{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: black;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    line-height: 60px;
+  }
+  `, 0);
+  sheet.insertRule(`
+  .magic-table-cube{
+    height: 62px;
+    width: 62px;
+    margin: 1px;
+    display: flex;
+    justify-content: space-around;
+    flex-flow: column;
   }
   `, 0);
   var subCommandPanel = $('.prt-sub-command');
@@ -179,8 +229,90 @@ function inject() {
     }
   }
 
-  // 绑定敌人HP
+
   waitForGameStage(() => {
+    // 魔 法 少 女 姬 塔
+    const abilityPop = $('.prt-ability-mark');
+    abilityPop.css('background', 'transparent');
+    let magicObsConfig = {
+      attributes: true,
+    }
+    let magicObsCallback = function (mutationsList) {
+      for (var mutations of mutationsList) {
+        if (
+          mutations.type === 'attributes' &&
+          mutations.attributeName === 'class' &&
+          abilityPop[0].classList.contains('prt-magic-circle')
+        ) {
+          abilityPop.children('.magic-cheat-sheet').remove();
+          let cheatTable = document.createElement('div');
+          cheatTable.classList.add('magic-cheat-sheet');
+
+          const frames = $('.lis-ability-frame');
+          const backgroundImage = frames.next().css('background-image');
+          // frames.next().css('background','transparent');
+
+          // 二维数组
+          let table = [];
+          for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+              let cube = document.createElement('div');
+              cube.classList.add('magic-table-cube');
+              let content = document.createElement('div');
+              let left = document.createElement('div');
+              $(left).css('background-image', backgroundImage);
+              $(left).css('background-size', '256px 1264px');
+              $(left).css('background-repeat', 'no-repeat');
+              $(left).css('background-position-x', magicLeft);
+              $(left).css('background-position-y', magicHeight[i]);
+              $(left).css('height', '55px');
+              $(left).css('width', '27.5px');
+              let right = document.createElement('div');
+              $(right).css('background-image', backgroundImage);
+              $(right).css('background-size', '256px 1264px');
+              $(right).css('background-repeat', 'no-repeat');
+              $(right).css('background-position-x', magicRight);
+              $(right).css('background-position-y', magicHeight[j]);
+              $(right).css('height', '55px')
+              $(right).css('width', '27.5px');
+              content.appendChild(left);
+              content.appendChild(right);
+              $(content).css('display', 'flex');
+              $(content).css('transform', 'scale(0.8)');
+              $(content).css('margin-top', '-7px');
+              $(content).css('margin-left', '3px');
+              let desc = document.createElement('div');
+              desc.innerHTML = magicDesc[i][j];
+              $(desc).css('color', 'white');
+              $(desc).css('line-height', '8px');
+              $(desc).css('font-size', '8px');
+              $(desc).css('height', '24px');
+              cube.appendChild(content);
+              cube.appendChild(desc);
+              // cube.innerHTML = `${magicCode[i]}/${magicCode[j]}`;
+
+              let count = 0;
+              cube.addEventListener('click', (event) => {
+                if (count === 0) {
+                  emulateClick(frames[i], event);
+                  $(left).css('background-position-y', magicActiveHeight[i]);
+                } else {
+                  emulateClick(frames[j], event);
+                  $(right).css('background-position-y', magicActiveHeight[j]);
+                }
+                count++;
+              })
+              cheatTable.appendChild(cube);
+            }
+          }
+          abilityPop[0].appendChild(cheatTable);
+        }
+      }
+    }
+    var magicObserver = new MutationObserver(magicObsCallback);
+    magicObserver.observe(abilityPop[0], magicObsConfig);
+
+    // 绑定敌人HP
     let enemies = stage.gGameStatus.boss.param;
     enemies.forEach((v, i) => {
       let hp = Number(v.hp);

@@ -1,8 +1,8 @@
 {
-  "pluginName": "碧蓝HOST",
+  "pluginName": "老七的微笑",
   "author": "Yukimir",
   "version": "0.0.3",
-  "description": "选择最佳的碧蓝幻想服务器",
+  "description": "俺は太陽になれ",
   "entry": "popup.html",
   "enable": false,
   "background": "background.js",

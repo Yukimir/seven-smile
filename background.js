@@ -2,7 +2,7 @@ const path = require('path');
 let PluginHelper = null;
 module.exports = {
   run: run,
-  newGameResponse: () => {}
+  newGameResponse: () => { }
 }
 
 let userID = null;
@@ -19,7 +19,7 @@ function run(pluginHelper) {
 }
 
 function init() {
-  ph.loadEmbedPage('right', path.join(__dirname, 'gbf-raid', 'dist', 'gbf-raid', 'index.html'), 400);
+  ph.loadEmbedPage('right', path.join(__dirname, 'gbf-raid', 'index.html'), 400);
   ph.onMessage((msg, sendResponse) => {
     switch (msg.type) {
       case 'userID':
